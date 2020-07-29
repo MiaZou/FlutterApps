@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../constants.dart';
 import '../components/reusable_card.dart';
 import '../components/bottom_button.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 
 class ResultsPage extends StatelessWidget {
   ResultsPage(
@@ -62,6 +63,7 @@ class ResultsPage extends StatelessWidget {
             buttonTitle: 'RE-CALCULATE',
             onTap: () {
               Navigator.pop(context);
+              Crashlytics.instance.log('ReCalculateBtn Error');
             },
           )
         ],

@@ -7,6 +7,9 @@ import 'results_page.dart';
 import '../components/bottom_button.dart';
 import '../components/round_icon_button.dart';
 import '../calculator_brain.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_analytics/observer.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 
 enum Gender { male, female }
 
@@ -20,6 +23,30 @@ class _InputPageState extends State<InputPage> {
   int height = 180;
   int weight = 60;
   int age = 20;
+
+  static FirebaseAnalytics analytics = FirebaseAnalytics();
+  final FirebaseAnalyticsObserver observer =
+      FirebaseAnalyticsObserver(analytics: analytics);
+  String _message = '';
+  void setMessage(String message) {
+    setState(() {
+      _message = message;
+    });
+  }
+
+  Future<void> _sendAnalyticsEvent() async {
+    await analytics.logEvent(
+      name: 'test_event',
+      parameters: <String, dynamic>{
+        'string': 'string',
+        'int': 42,
+        'long': 12345678910,
+        'double': 42.0,
+        'bool': true,
+      },
+    );
+    setMessage('logEvent succeeded');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -206,12 +233,15 @@ class _InputPageState extends State<InputPage> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
+                        settings: RouteSettings(name: 'InputPage'),
                         builder: (context) => ResultsPage(
                               bmiResult: calc.calculateBMI(),
                               resultText: calc.getResult(),
                               interpretation: calc.getInterpretation(),
                             )),
                   );
+                  _sendAnalyticsEvent();
+                  Crashlytics.instance.crash();
                 }),
           ],
         ));
