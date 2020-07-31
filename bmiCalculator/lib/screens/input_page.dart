@@ -28,6 +28,7 @@ class _InputPageState extends State<InputPage> {
   final FirebaseAnalyticsObserver observer =
       FirebaseAnalyticsObserver(analytics: analytics);
   String _message = '';
+
   void setMessage(String message) {
     setState(() {
       _message = message;
@@ -233,14 +234,13 @@ class _InputPageState extends State<InputPage> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        settings: RouteSettings(name: 'InputPage'),
+                        settings: RouteSettings(name: 'ResultPage'),
                         builder: (context) => ResultsPage(
                               bmiResult: calc.calculateBMI(),
                               resultText: calc.getResult(),
                               interpretation: calc.getInterpretation(),
                             )),
                   );
-                  _sendAnalyticsEvent();
                   Crashlytics.instance.crash();
                 }),
           ],
